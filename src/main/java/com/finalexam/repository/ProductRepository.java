@@ -30,12 +30,20 @@ public class ProductRepository {
     public List<Product> search(String name, Integer productTypeId, Double minPrice) {
         String sql = "SELECT p.id, p.name, p.price, p.status, pt.id as type_id, pt.name as type_name " +
                 "FROM product p LEFT JOIN product_type pt ON p.product_type_id = pt.id " +
-                "WHERE (:name IS NULL OR p.name LIKE CONCAT('%', :name, '%')) " +
-                "AND (:productTypeId IS NULL OR p.product_type_id = :productTypeId) " +
-                "AND (:minPrice IS NULL OR p.price >= :minPrice)";
+                "WHERE (? IS NULL OR p.name LIKE CONCAT('%', ?, '%')) " +
+                "AND (? IS NULL OR p.product_type_id = ?) " +
+                "AND (? IS NULL OR p.price >= ?)";
+
         return jdbcTemplate.query(sql,
-                new ProductRowMapper(),
-                name, productTypeId, minPrice);
+                new Object[] {
+                        name == null ? null : name,
+                        name == null ? null : name,
+                        productTypeId == null ? null : productTypeId,
+                        productTypeId == null ? null : productTypeId,
+                        minPrice == null ? null : minPrice,
+                        minPrice == null ? null : minPrice
+                },
+                new ProductRowMapper());
     }
 
     public void save(Product product) {

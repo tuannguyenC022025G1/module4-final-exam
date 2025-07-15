@@ -5,7 +5,7 @@ plugins {
 
 group = 'com.finalexam'
 version = '1.0-SNAPSHOT'
-sourceCompatibility = '22'
+sourceCompatibility = '17'
 
 repositories {
   mavenCentral()

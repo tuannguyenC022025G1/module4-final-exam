@@ -24,13 +24,18 @@ public class ProductController {
     private ProductService productService;
     @Autowired
     private ProductTypeRepository productTypeRepository;
+    @GetMapping("/")
+    public String redirectToProductList() {
+        return "redirect:/products";
+    }
+
 
     @GetMapping("/products")
     public String listProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "") String name,
-            @RequestParam(defaultValue = "") Integer productTypeId,
-            @RequestParam(defaultValue = "") Double minPrice,
+            @RequestParam(defaultValue = "0") Integer productTypeId,
+            @RequestParam(defaultValue = "0") Double minPrice,
             Model model) {
         int pageSize = 5;
         List<Product> allProducts = productService.searchProducts(
