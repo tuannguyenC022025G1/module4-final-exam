@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Management</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h1>Product Management</h1>
+<a th:href="@{/products/add}">Add Product</a>
+<form th:action="@{/products}" method="get">
+    <input type="text" name="name" th:value="${name}" placeholder="Product Name">
+    <select name="productTypeId">
+        <option value="">All Product Types</option>
+        <option th:each="type : ${productTypes}" th:value="${type.id}" th:text="${type.name}"
+                th:selected="${productTypeId} == ${type.id}"></option>
+    </select>
+    <input type="number" name="minPrice" th:value="${minPrice}" placeholder="Minimum Price">
+    <button type="submit">Search</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Product Type</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.productType.name}"></td>
+        <td th:text="${product.status}"></td>
+        <td>
+            <form th:action="@{/products/delete}" method="post" onsubmit="return confirm('Are you sure you want to delete?');">
+                <input type="hidden" name="id" th:value="${product.id}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <span th:text="'Page ' + ${currentPage + 1} + ' / ' + ${totalPages}"></span>
+    <a th:if="${currentPage > 0}" th:href="@{/products(page=${currentPage - 1}, name=${name}, productTypeId=${productTypeId}, minPrice=${minPrice})}">Previous</a>
+    <a th:if="${currentPage < totalPages - 1}" th:href="@{/products(page=${currentPage + 1}, name=${name}, productTypeId=${productTypeId}, minPrice=${minPrice})}">Next</a>
+</div>
+</body>
+</html>
